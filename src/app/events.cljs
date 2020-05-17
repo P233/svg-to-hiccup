@@ -9,11 +9,6 @@
    db/default-db))
 
 (rf/reg-event-db
- :increase-counter
- (fn [db]
-   (update db :counter inc)))
-
-(rf/reg-event-db
- :decrease-counter
- (fn [db]
-   (update db :counter dec)))
+ :upload-svg-files
+ (fn [db [_ files]]
+   (assoc db :raw-svg-files files)))

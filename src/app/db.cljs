@@ -1,4 +1,6 @@
 (ns app.db)
 
 (def default-db
-  {:counter 0})
+  {:raw-svg-files []
+   :output-form :separate
+   :output-namespace ""})

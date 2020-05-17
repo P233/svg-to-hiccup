@@ -3,6 +3,6 @@
    [re-frame.core :as rf]))
 
 (rf/reg-sub
- :counter
+ :files-uploaded?
  (fn [db]
-   (:counter db)))
+   (not-empty (:raw-svg-files db))))

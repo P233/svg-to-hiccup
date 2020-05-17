@@ -1,10 +1,27 @@
 $margin: 0;
 
-:global body {
-  margin: $margin;
-  user-select: none;
+:global {
+  body {
+    margin: $margin;
+    user-select: none;
+  }
+
+  .header {
+    text-align: center;
+  }
 }
 
-.h1 {
-  margin: $margin;
+.upload {
+  display: table;
+  margin-right: auto;
+  margin-left: auto;
+
+  &__button {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  &__input {
+    display: none;
+  }
 }
