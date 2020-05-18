@@ -12,3 +12,8 @@
  :upload-svg-files
  (fn [db [_ files]]
    (assoc db :raw-svg-files files)))
+
+(rf/reg-event-db
+ :clear-uploaded-svgs
+ (fn [db]
+   (assoc db :raw-svg-files [])))

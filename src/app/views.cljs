@@ -17,6 +17,21 @@
      :multiple true
      :on-change #(rf/dispatch [:upload-svg-files (-> % .-target .-files)])}]])
 
+(defn uploaded-msg [amount]
+  [:p
+   (str amount " " (if (> amount 1) "files" "file") " uploaded.")
+   [:button
+    {:on-click #(rf/dispatch [:clear-uploaded-svgs])}
+    "clear"]])
+
+(defn svgs-list []
+  (map #(.-name %) @(rf/subscribe [:raw-svg-files])))
+
 (defn page []
   [:<>
-   [upload-button]])
+   (if @(rf/subscribe [:are-svgs-uploaded?])
+     (let [amount @(rf/subscribe [:svgs-amount])]
+       [:<>
+        [uploaded-msg amount]
+        [svgs-list]])
+     [upload-button])])
