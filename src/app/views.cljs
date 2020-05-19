@@ -1,7 +1,8 @@
 (ns app.views
   (:require
    [re-frame.core :as rf]
-   [app.styles :as styles]))
+   [app.styles :as styles]
+   [lib.core :refer [svg->hiccup]]))
 
 (defn upload-button []
   [:label
@@ -28,7 +29,7 @@
   (let [reader (js/FileReader.)]
     (set! (.-onload reader)
           (fn [e]
-            (-> e .-target .-result js/console.log)))
+            (-> e .-target .-result svg->hiccup)))
     (.readAsText reader file)))
 
 (defn svgs-list []
