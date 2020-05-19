@@ -24,8 +24,15 @@
     {:on-click #(rf/dispatch [:clear-uploaded-svgs])}
     "clear"]])
 
+(defn read-file [file]
+  (let [reader (js/FileReader.)]
+    (set! (.-onload reader)
+          (fn [e]
+            (-> e .-target .-result js/console.log)))
+    (.readAsText reader file)))
+
 (defn svgs-list []
-  (map #(.-name %) @(rf/subscribe [:raw-svg-files])))
+  (map #(read-file %) @(rf/subscribe [:raw-svg-files])))
 
 (defn page []
   [:<>
