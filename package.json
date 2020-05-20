@@ -14,8 +14,7 @@
   "homepage": "https://github.com/P233/svg-to-hiccup#readme",
   "dependencies": {
     "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "svgson": "^4.1.0"
+    "react-dom": "^16.13.0"
   },
   "devDependencies": {
     "@p233/stylelint-config-scss": "^2.0.1",

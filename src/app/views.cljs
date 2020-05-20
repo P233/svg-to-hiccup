@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [app.styles :as styles]
-   [lib.core :refer [svg->hiccup]]))
+   [hickory.core :as hickory]))
 
 (defn upload-button []
   [:label
@@ -28,8 +28,7 @@
 (defn read-file [file]
   (let [reader (js/FileReader.)]
     (set! (.-onload reader)
-          (fn [e]
-            (-> e .-target .-result svg->hiccup)))
+          #(->> % .-target .-result hickory/parse-fragment (map hickory/as-hiccup) js/console.log))
     (.readAsText reader file)))
 
 (defn svgs-list []
