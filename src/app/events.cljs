@@ -1,6 +1,7 @@
 (ns app.events
   (:require
    [re-frame.core :as rf]
+   [hickory.core :as hickory]
    [app.db :as db]))
 
 (rf/reg-event-db
@@ -9,11 +10,15 @@
    db/default-db))
 
 (rf/reg-event-db
- :upload-svg-files
- (fn [db [_ files]]
-   (assoc db :raw-svg-files files)))
+ :upload-svg
+ (fn [db [_ name html]]
+   (update-in db [:svg-list] conj {:name name
+                                   :html html
+                                   :hiccup (->> html
+                                                hickory/parse-fragment
+                                                (map hickory/as-hiccup))})))
 
 (rf/reg-event-db
- :clear-uploaded-svgs
+ :clear-svgs
  (fn [db]
-   (assoc db :raw-svg-files [])))
+   (assoc db :svg-list ())))

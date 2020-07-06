@@ -1,8 +1,16 @@
 (ns app.views
   (:require
+   [clojure.string :as string]
    [re-frame.core :as rf]
-   [app.styles :as styles]
-   [hickory.core :as hickory]))
+   [app.styles :as styles]))
+
+(defn read-file [file]
+  (let [reader (js/FileReader.)]
+    (set! (.-onload reader)
+          #(rf/dispatch [:upload-svg
+                         (.-name file)
+                         (-> % .-target .-result)]))
+    (.readAsText reader file "UTF-8")))
 
 (defn upload-button []
   [:label
@@ -16,29 +24,29 @@
      :type "file"
      :accept ".svg"
      :multiple true
-     :on-change #(rf/dispatch [:upload-svg-files (-> % .-target .-files)])}]])
+     :on-change #(doseq [x (-> % .-target .-files)] (read-file x))}]])
 
 (defn uploaded-msg [amount]
   [:p
    (str amount " " (if (> amount 1) "files" "file") " uploaded.")
    [:button
-    {:on-click #(rf/dispatch [:clear-uploaded-svgs])}
+    {:on-click #(rf/dispatch [:clear-svgs])}
     "clear"]])
 
-(defn read-file [file]
-  (let [reader (js/FileReader.)]
-    (set! (.-onload reader)
-          #(->> % .-target .-result hickory/parse-fragment (map hickory/as-hiccup) js/console.log))
-    (.readAsText reader file)))
-
-(defn svgs-list []
-  (map #(read-file %) @(rf/subscribe [:raw-svg-files])))
+(defn svg-list [list]
+  [:ul
+   (for [svg list]
+     ^{:key (:name svg)}
+     [:li
+      [:h2 (:name svg)]
+      [:div {:dangerouslySetInnerHTML
+             {:__html (:html svg)}}]
+      [:div (-> :hiccup svg str (string/replace #" \"\\n\"|^\(|\)$" ""))]])])
 
 (defn page []
   [:<>
-   (if @(rf/subscribe [:are-svgs-uploaded?])
-     (let [amount @(rf/subscribe [:svgs-amount])]
-       [:<>
-        [uploaded-msg amount]
-        [svgs-list]])
-     [upload-button])])
+   (if @(rf/subscribe [:svg-uploaded?])
+     [:<>
+      [uploaded-msg @(rf/subscribe [:svg-count])]]
+     [upload-button])
+   [svg-list @(rf/subscribe [:svg-list])]])

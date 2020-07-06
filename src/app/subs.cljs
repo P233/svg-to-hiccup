@@ -3,16 +3,16 @@
    [re-frame.core :as rf]))
 
 (rf/reg-sub
- :raw-svg-files
+ :svg-list
  (fn [db]
-   (:raw-svg-files db)))
+   (:svg-list db)))
 
 (rf/reg-sub
- :are-svgs-uploaded?
+ :svg-uploaded?
  (fn [db]
-   (not-empty (:raw-svg-files db))))
+   (not-empty (:svg-list db))))
 
 (rf/reg-sub
- :svgs-amount
+ :svg-count
  (fn [db]
-   (.-length (:raw-svg-files db))))
+   (count (:svg-list db))))
