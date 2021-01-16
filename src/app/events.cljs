@@ -1,7 +1,6 @@
 (ns app.events
   (:require
    [re-frame.core :as rf]
-   [hickory.core :as hickory]
    [app.db :as db]))
 
 (rf/reg-event-db
@@ -10,15 +9,24 @@
    db/default-db))
 
 (rf/reg-event-db
- :upload-svg
- (fn [db [_ name html]]
-   (update-in db [:svg-list] conj {:name name
-                                   :html html
-                                   :hiccup (->> html
-                                                hickory/parse-fragment
-                                                (map hickory/as-hiccup))})))
+ :add-svg-entry
+ (fn [db [_ entry]]
+   (if (some #(= (:name %) (:name entry)) (:svgs-list db))
+     (update-in db [:duplicates-list] conj (:name entry))
+     (update-in db [:svgs-list] conj entry))))
 
 (rf/reg-event-db
- :clear-svgs
+ :remove-svg-entry
+ (fn [db [_ entry]]
+   (update-in db [:svgs-list] (fn [list]
+                                (remove #(= % entry) list)))))
+
+(rf/reg-event-db
+ :clear-svgs-list
  (fn [db]
-   (assoc db :svg-list ())))
+   (assoc db :svgs-list ())))
+
+(rf/reg-event-db
+ :clear-duplicates-list
+ (fn [db]
+   (assoc db :duplicates-list ())))

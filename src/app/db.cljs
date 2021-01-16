@@ -1,5 +1,5 @@
 (ns app.db)
 
 (def default-db
-  {:svg-list ()
-   :output-variable true})
+  {:svgs-list ()
+   :duplicates-list ()})

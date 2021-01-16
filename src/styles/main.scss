@@ -3,7 +3,10 @@ $margin: 0;
 :global {
   body {
     margin: $margin;
-    user-select: none;
+  }
+
+  svg {
+    fill: currentColor;
   }
 
   .header {
@@ -20,12 +23,32 @@ $margin: 0;
   margin-right: auto;
   margin-left: auto;
 
+  &--large {
+    background: yellow;
+  }
+
   &__button {
     text-decoration: underline;
     cursor: pointer;
   }
 
+  &__icon {
+    margin-right: 8px;
+  }
+
   &__input {
     display: none;
+  }
+}
+
+.controller {
+  display: flex;
+
+  &__counter {
+    color: red;
+  }
+
+  &__button {
+    background: yellow;
   }
 }
