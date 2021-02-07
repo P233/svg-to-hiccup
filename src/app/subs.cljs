@@ -3,21 +3,21 @@
    [re-frame.core :as rf]))
 
 (rf/reg-sub
- :svgs-list
+ :svg-entries-list
  (fn [db]
-   (:svgs-list db)))
+   (:svg-entries-list db)))
 
 (rf/reg-sub
- :svgs-count
+ :svg-filess-count
  (fn [db]
-   (count (:svgs-list db))))
+   (count (:svg-entries-list db))))
 
 (rf/reg-sub
- :duplicates-list
+ :duplicate-svg-files-list
  (fn [db]
-   (:duplicates-list db)))
+   (:duplicate-svg-files-list db)))
 
 (rf/reg-sub
- :duplicates-count
+ :duplicate-svg-files-count
  (fn [db]
-   (count (:duplicates-list db))))
+   (count (:duplicate-svg-files-list db))))

@@ -7,7 +7,7 @@
 
 (defn ^:dev/after-load mount []
   (rf/clear-subscription-cache!)
-  (rdom/render [views/page]
+  (rdom/render [views/Page]
                (.getElementById js/document "app")))
 
 (defn ^:export init []

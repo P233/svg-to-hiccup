@@ -11,22 +11,22 @@
 (rf/reg-event-db
  :add-svg-entry
  (fn [db [_ entry]]
-   (if (some #(= (:name %) (:name entry)) (:svgs-list db))
-     (update-in db [:duplicates-list] conj (:name entry))
-     (update-in db [:svgs-list] conj entry))))
+   (if (some #(= (:filename %) (:filename entry)) (:svg-entries-list db))
+     (update-in db [:duplicate-svg-files-list] conj (:filename entry))
+     (update-in db [:svg-entries-list] conj entry))))
 
 (rf/reg-event-db
  :remove-svg-entry
  (fn [db [_ entry]]
-   (update-in db [:svgs-list] (fn [list]
-                                (remove #(= % entry) list)))))
+   (update-in db [:svg-entries-list] (fn [list]
+                                       (remove #(= % entry) list)))))
 
 (rf/reg-event-db
- :clear-svgs-list
+ :clear-svg-entries-list
  (fn [db]
-   (assoc db :svgs-list ())))
+   (assoc db :svg-entries-list ())))
 
 (rf/reg-event-db
- :clear-duplicates-list
+ :clear-duplicate-svg-files-list
  (fn [db]
-   (assoc db :duplicates-list ())))
+   (assoc db :duplicate-svg-files-list ())))
