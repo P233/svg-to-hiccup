@@ -5,6 +5,7 @@
    [reagent.ratom :as ra]
    [re-frame.core :as rf]
    [hickory.core :as h]
+   [app.helpers :as helpers]
    [app.icons :as Icons]
    [app.styles :as styles]))
 
@@ -28,7 +29,7 @@
   (-> hiccup
       str
       (string/replace #"\s*\"\\n\"" "") ; remove ` "\n"`
-      (string/replace "viewbox" "viewBox")))
+      (helpers/replace-attributes)))
 
 (defn generate-literal-hiccup [entry]
   (-> entry :hiccup stringify-hiccup))
