@@ -2,7 +2,7 @@
   (:require
    [clojure.string :as string]
    [reagent.core :as r]
-   [reagent.ratom :as ra]
+   [reagent.ratom :as ratom]
    [re-frame.core :as rf]
    [hickory.core :as h]
    [app.helpers :as helpers]
@@ -76,7 +76,7 @@
 (defn DownloadDropdown []
   (let [open? (r/atom false)
         namespace (r/atom "app.icons")
-        exported-filename (ra/make-reaction #(-> @namespace (string/split ".") last (str ".cljs")))]
+        exported-filename (ratom/make-reaction #(-> @namespace (string/split ".") last (str ".cljs")))]
     (fn []
       [:div
        {:class styles/dropdown}
