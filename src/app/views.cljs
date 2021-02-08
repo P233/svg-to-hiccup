@@ -39,12 +39,13 @@
     (:hiccup x)
     (assoc-in x [1 :class] "__class__")
     (stringify-hiccup x)
-    (string/replace x "\"__class__\"" "class") ; Unquoted "class"
+    (string/replace x "\"__class__\"" "class") ; Unquote "class"
     (str "(defn " (-> entry :filename (string/split ".") first) " [{:keys [class]}]\n\t" x ")")))
 
 (defn generate-exported-file-content [namespace]
   (let [init-line (str "(ns " namespace ")")]
     (->> @(rf/subscribe [:svg-entries-list])
+         (sort #(compare (:filename %1) (:filename %2)))
          (map generate-literal-svg-defn)
          (concat [init-line])
          (string/join "\n\n"))))
