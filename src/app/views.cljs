@@ -129,8 +129,8 @@
 
 (defn DuplicatesMessage []
   [:div
-   (str "File " (string/join ", " @(rf/subscribe [:duplicate-svg-files-list])) " already added.")
-   [:button {:on-click #(rf/dispatch [:clear-duplicate-svg-files-list])}
+   (str "File " (string/join ", " @(rf/subscribe [:duplicate-svg-filenames-list])) " already added.")
+   [:button {:on-click #(rf/dispatch [:clear-duplicate-svg-filenames-list])}
     [Icons/cross]
     "Close"]])
 

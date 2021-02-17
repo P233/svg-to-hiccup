@@ -13,11 +13,11 @@
    (count (:svg-entries-list db))))
 
 (rf/reg-sub
- :duplicate-svg-files-list
+ :duplicate-svg-filenames-list
  (fn [db]
-   (:duplicate-svg-files-list db)))
+   (:duplicate-svg-filenames-list db)))
 
 (rf/reg-sub
  :duplicate-svg-files-count
  (fn [db]
-   (count (:duplicate-svg-files-list db))))
+   (count (:duplicate-svg-filenames-list db))))
