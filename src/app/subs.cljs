@@ -21,3 +21,8 @@
  :duplicate-svg-files-count
  (fn [db]
    (count (:duplicate-svg-filenames-list db))))
+
+(rf/reg-sub
+ :show-svg-defn?
+ (fn [db]
+   (:show-svg-defn? db)))

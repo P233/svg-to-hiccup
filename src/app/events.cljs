@@ -21,7 +21,8 @@
  :initialize-db
  (fn []
    {:svg-entries-list (rfs/<-store :svg-entries-store)
-    :duplicate-svg-filenames-list ()}))
+    :duplicate-svg-filenames-list ()
+    :show-svg-defn? false}))
 
 (rfs-reg-event-fx
  :add-svg-entry
@@ -50,3 +51,8 @@
  :clear-duplicate-svg-filenames-list
  (fn [db]
    (assoc db :duplicate-svg-filenames-list ())))
+
+(rf/reg-event-db
+ :toggle-show-svg-defn
+ (fn [db]
+   (update-in db [:show-svg-defn?] not)))

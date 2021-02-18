@@ -111,26 +111,36 @@
    [UploadButton]
    [DownloadDropdown]
    [:button
+    {:on-click #(rf/dispatch [:toggle-show-svg-defn])}
+    "Toggle SVG defn"]
+   [:button
     {:on-click #(rf/dispatch [:clear-svg-entries-list])}
     [Icons/trash]
     "Clear all SVGs"]])
 
-(defn SVGsList [list]
-  [:ul
-   (for [entry list]
-     (let [hiccup-svg (generate-literal-hiccup entry)]
+(defn SVGEntry [entry show-svg-defn?]
+  (let [code (if show-svg-defn?
+               (generate-literal-svg-defn entry)
+               (generate-literal-hiccup entry))]
+    [:div
+     [:h2 (:filename entry)]
+     [:div {:dangerouslySetInnerHTML {:__html (:html entry)}}]
+     [:pre>code code]
+     [:> CopyToClipboard
+      {:text code}
+      [:button "Copy"]]
+     [:button
+      {:on-click #(rf/dispatch [:remove-svg-entry entry])}
+      [Icons/trash]
+      "Remove"]]))
+
+(defn SVGEntriesList [list]
+  (let [show-svg-defn? @(rf/subscribe [:show-svg-defn?])]
+    [:ul
+     (for [entry list]
        ^{:key (:filename entry)}
        [:li
-        [:h2 (:filename entry)]
-        [:div {:dangerouslySetInnerHTML {:__html (:html entry)}}]
-        [:pre>code hiccup-svg]
-        [:> CopyToClipboard
-         {:text hiccup-svg}
-         [:button "Copy"]]
-        [:button
-         {:on-click #(rf/dispatch [:remove-svg-entry entry])}
-         [Icons/trash]
-         "Remove"]]))])
+        [SVGEntry entry show-svg-defn?]])]))
 
 (defn DuplicatesMessage []
   [:div
@@ -147,5 +157,5 @@
      (if (> svgs-count 0)
        [:<>
         [Controller svgs-count]
-        [SVGsList @(rf/subscribe [:svg-entries-list])]]
+        [SVGEntriesList @(rf/subscribe [:svg-entries-list])]]
        [UploadButton true])]))
