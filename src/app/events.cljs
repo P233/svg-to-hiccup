@@ -6,27 +6,28 @@
 (defn rfs-reg-event-fx [event-id handler]
   (rf/reg-event-fx
    event-id
-   [(rfs/persist-db :svg-entries-store :svg-entries-list)]
-   (fn [{:keys [db]} event-vec]
-     (handler db event-vec))))
+   [(rfs/persist-db-keys :store [:svg-entries-list :show-svg-defn?])]
+   (fn [cofx event-vec]
+     (handler cofx event-vec))))
 
 (defn rfs-reg-event-db [event-id handler]
   (rf/reg-event-fx
    event-id
-   [(rfs/persist-db :svg-entries-store :svg-entries-list)]
+   [(rfs/persist-db-keys :store [:svg-entries-list :show-svg-defn?])]
    (fn [{:keys [db]} event-vec]
      {:db (handler db event-vec)})))
 
 (rf/reg-event-db
  :initialize-db
  (fn []
-   {:svg-entries-list (rfs/<-store :svg-entries-store)
-    :duplicate-svg-filenames-list ()
-    :show-svg-defn? false}))
+   (let [store (rfs/<-store :store)]
+     {:svg-entries-list (:svg-entries-list store)
+      :show-svg-defn? (:show-svg-defn? store)
+      :duplicate-svg-filenames-list ()})))
 
 (rfs-reg-event-fx
  :add-svg-entry
- (fn [db [_ entry]]
+ (fn [{:keys [db]} [_ entry]]
    (if (some #(= (:filename %) (:filename entry)) (:svg-entries-list db))
      {:fx [[:dispatch [:add-duplicate-svg-filename (:filename entry)]]]}
      {:db (update-in db [:svg-entries-list] conj entry)})))
@@ -52,7 +53,7 @@
  (fn [db]
    (assoc db :duplicate-svg-filenames-list ())))
 
-(rf/reg-event-db
+(rfs-reg-event-db
  :toggle-show-svg-defn
  (fn [db]
    (update-in db [:show-svg-defn?] not)))
