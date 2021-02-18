@@ -5,6 +5,7 @@
    [reagent.ratom :as ratom]
    [re-frame.core :as rf]
    [hickory.core :as h]
+   ["react-copy-to-clipboard" :refer [CopyToClipboard]]
    [app.helpers :as helpers]
    [app.icons :as Icons]
    [app.styles :as styles]))
@@ -117,15 +118,19 @@
 (defn SVGsList [list]
   [:ul
    (for [entry list]
-     ^{:key (:filename entry)}
-     [:li
-      [:h2 (:filename entry)]
-      [:div {:dangerouslySetInnerHTML {:__html (:html entry)}}]
-      [:pre>code (generate-literal-hiccup entry)]
-      [:button
-       {:on-click #(rf/dispatch [:remove-svg-entry entry])}
-       [Icons/trash]
-       "Remove"]])])
+     (let [hiccup-svg (generate-literal-hiccup entry)]
+       ^{:key (:filename entry)}
+       [:li
+        [:h2 (:filename entry)]
+        [:div {:dangerouslySetInnerHTML {:__html (:html entry)}}]
+        [:pre>code hiccup-svg]
+        [:> CopyToClipboard
+         {:text hiccup-svg}
+         [:button "Copy"]]
+        [:button
+         {:on-click #(rf/dispatch [:remove-svg-entry entry])}
+         [Icons/trash]
+         "Remove"]]))])
 
 (defn DuplicatesMessage []
   [:div
