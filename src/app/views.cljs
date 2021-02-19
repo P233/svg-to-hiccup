@@ -30,7 +30,7 @@
 (defn stringify-hiccup [hiccup]
   (-> hiccup
       str
-      (string/replace #"\s*\"\\n\"" "") ; remove ` "\n"`
+      (string/replace #"\s*\"\\n\s*\"" "") ; Remove ` "\n"`
       (helpers/replace-attributes)))
 
 (defn generate-literal-hiccup [entry]
