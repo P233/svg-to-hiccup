@@ -14,11 +14,4 @@
                 :output-dir "public/js"
                 :asset-path "/js"
                 :devtools {:http-root "public"
-                           :http-port 3000}}
-
-          :browser-test {:target :browser-test
-                         :ns-regexp "-test$"
-                         :runner-ns shadow.test.browser
-                         :test-dir "test-output/browser-test"
-                         :devtools {:http-root "test-output/browser-test"
-                                    :http-port 3001}}}}
+                           :http-port 3000}}}}
