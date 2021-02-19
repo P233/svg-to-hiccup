@@ -36,24 +36,30 @@
 (defn generate-literal-hiccup [entry]
   (-> entry :hiccup stringify-hiccup))
 
-(defn generate-literal-svg-defn [entry]
+(defn generate-literal-svg-defn [entry indentation]
   (as-> entry x
     (:hiccup x)
     (assoc-in x [1 :class] "__class__")
     (stringify-hiccup x)
     (string/replace x "\"__class__\"" "class") ; Unquote "class"
-    (str "(defn " (-> entry :filename (string/split ".") first) " [{:keys [class]}]\n\t" x ")")))
+    (str
+     "(defn "
+     (-> entry :filename (string/split ".") first)
+     " [{:keys [class]}]\n"
+     (apply str (repeat (js/parseInt indentation) " "))
+     x
+     ")")))
 
-(defn generate-exported-file-content [namespace]
+(defn generate-exported-file-content [namespace indentation]
   (let [init-line (str "(ns " namespace ")")]
     (->> @(rf/subscribe [:svg-entries-list])
          (sort #(compare (:filename %1) (:filename %2)))
-         (map generate-literal-svg-defn)
+         (map #(generate-literal-svg-defn % indentation))
          (concat [init-line])
          (string/join "\n\n"))))
 
-(defn download-exported-file [namespace filename]
-  (let [blob (js/Blob. [(generate-exported-file-content namespace)] {:type "text/plain"})
+(defn download-exported-file [namespace indentation filename]
+  (let [blob (js/Blob. [(generate-exported-file-content namespace indentation)] {:type "text/plain"})
         link (js/document.createElement "a")]
     (set! (.-href link) (js/URL.createObjectURL blob))
     (.setAttribute link "download" filename)
@@ -79,6 +85,7 @@
 (defn DownloadDropdown []
   (let [open? (r/atom false)
         namespace (r/atom "app.icons")
+        indentation (r/atom "2")
         exported-filename (ratom/make-reaction #(-> @namespace (string/split ".") last (str ".cljs")))]
     (fn []
       [:div
@@ -95,8 +102,12 @@
             {:value @namespace
              :on-change #(reset! namespace (-> % .-target .-value))
              :class styles/dropdown__input}]
+           [:input
+            {:value @indentation
+             :on-change #(reset! indentation (-> % .-target .-value))
+             :class styles/dropdown__input}]
            [:button
-            {:on-click #(download-exported-file @namespace @exported-filename)
+            {:on-click #(download-exported-file @namespace @indentation @exported-filename)
              :class styles/dropdown__button}
             (str "Download " @exported-filename)]]
           [:div
@@ -121,7 +132,7 @@
 
 (defn SVGEntry [entry show-svg-defn?]
   (let [code (if show-svg-defn?
-               (generate-literal-svg-defn entry)
+               (generate-literal-svg-defn entry 2)
                (generate-literal-hiccup entry))]
     [:div
      [:h2 (:filename entry)]
