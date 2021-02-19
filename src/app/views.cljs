@@ -7,9 +7,12 @@
    [hickory.core :as h]
    ["react-copy-to-clipboard" :refer [CopyToClipboard]]
    ["react-syntax-highlighter" :refer [Light]]
+   ["react-syntax-highlighter/dist/esm/languages/hljs/clojure" :default hljs-clojure]
    [app.helpers :as helpers]
    [app.icons :as Icons]
    [app.styles :as styles]))
+
+((.-registerLanguage Light) "cljs" hljs-clojure)
 
 (defn create-svg-entry [filename content]
   {:filename filename
@@ -138,7 +141,7 @@
      [:h2 (:filename entry)]
      [:div {:dangerouslySetInnerHTML {:__html (:html entry)}}]
      [:> Light
-      {:language "clojure"
+      {:language "cljs"
        :wrapLines true}
       code]
      [:> CopyToClipboard
