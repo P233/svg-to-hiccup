@@ -44,7 +44,7 @@
     "cljfmt:check": "clojure -Sdeps '{:deps {cljfmt {:mvn/version \"0.7.0\"}}}' -m cljfmt.main check src shadow-cljs.edn || true",
     "dev": "npm run clean && concurrently 'npm:watch:sass' 'npm:watch:cljs'",
     "build": "npm run clean && npm run build:sass && npm run build:cljs",
-    "clean": "rm -rf public/js public/css src/app/styles.cljs test-output",
+    "clean": "rm -rf .shadow-cljs public/js public/css src/app/styles.cljs",
     "build-report": "shadow-cljs run shadow.cljs.build-report app report.html"
   },
   "husky": {
