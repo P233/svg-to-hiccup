@@ -17,6 +17,19 @@ $margin: 0;
     text-align: center;
   }
 
+  pre {
+    text-align: left;
+  }
+
+  .language-clojure {
+    white-space: pre-line !important;
+
+    > span:nth-child(2) {
+      display: block;
+      padding-left: 1em;
+    }
+  }
+
   .hljs {
     &-keyword {
       color: red;

@@ -138,7 +138,8 @@
      [:h2 (:filename entry)]
      [:div {:dangerouslySetInnerHTML {:__html (:html entry)}}]
      [:> Light
-      {:language "clojure"}
+      {:language "clojure"
+       :wrapLines true}
       code]
      [:> CopyToClipboard
       {:text code}
