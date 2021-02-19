@@ -6,6 +6,7 @@
    [re-frame.core :as rf]
    [hickory.core :as h]
    ["react-copy-to-clipboard" :refer [CopyToClipboard]]
+   ["react-syntax-highlighter" :refer [Light]]
    [app.helpers :as helpers]
    [app.icons :as Icons]
    [app.styles :as styles]))
@@ -125,7 +126,9 @@
     [:div
      [:h2 (:filename entry)]
      [:div {:dangerouslySetInnerHTML {:__html (:html entry)}}]
-     [:pre>code code]
+     [:> Light
+      {:language "clojure"}
+      code]
      [:> CopyToClipboard
       {:text code}
       [:button "Copy"]]

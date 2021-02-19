@@ -16,6 +16,24 @@ $margin: 0;
   .main {
     text-align: center;
   }
+
+  .hljs {
+    &-keyword {
+      color: red;
+    }
+
+    &-title {
+      color: blue;
+    }
+
+    &-string {
+      color: green;
+    }
+
+    &-symbol {
+      color: purple;
+    }
+  }
 }
 
 .upload {
